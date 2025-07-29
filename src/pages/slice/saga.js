@@ -1,14 +1,11 @@
-import axios from "axios";
+
 import { call, put, takeLatest } from "redux-saga/effects";
 import { actions } from "./slice";
+import { authLogin, authRegister, authLogout } from "../../services/api";
 
 function* fetchLogin(action) {
   try {
-  
-    const result = yield call(axios.post,"http://localhost:5000/api/auth/login", action.payload, {
-        withCredentials: true,
-      }
-    );
+    const result = yield call(authLogin, action.payload);
     yield put({
       type: actions.loginSuccess.type,
       payload: result.data,
@@ -22,9 +19,13 @@ function* fetchSignup(action) {
   
   
   try {
-    const result = yield call(
-      axios.post,"http://localhost:5000/api/auth/signup", action.payload
-    );    
+    const result = yield call(authRegister, action.payload);
+    // Redirect to login page after successful signup
+    if (result?.status === 201) {
+      alert("Signup successful!");
+      window.location.href = "/login";
+    }
+    // Assuming the API returns a success message or status
     yield put({
       type: actions.signupSuccess.type,
       payload: result?.statusText,
@@ -34,11 +35,9 @@ function* fetchSignup(action) {
   }
 }
 
-function* logout(action) {
+function* logout() {
   try {
-    const result = yield call(axios.post, "http://localhost:5000/api/auth/logout", null, {
-      withCredentials: true,
-    });
+    const result = yield call(authLogout);
     yield put({
       type: actions.logoutSuccess.type,
       payload: result.data,

@@ -1,10 +1,10 @@
 import {call , takeLatest, put} from 'redux-saga/effects';
-import axios from 'axios';
 import { actions } from './slice';
+import { createCard } from '../../../services/api';
 
 function* fetchProducts() { 
     try {
-        const result = yield call(axios.get,"http://localhost:5000/api/post");
+        const result = yield call(fetchProducts);
         yield put({
             type: actions.getProductsSuccess.type,
             payload: result.data,
@@ -15,11 +15,9 @@ function* fetchProducts() {
 }
 
 function* addProductToCards(action) {
-    console.log(action.payload
-    );
     
     try {
-        const result = yield call(axios.post,"http://localhost:5000/api/cards", action.payload);
+        const result = yield call(createCard,action.payload);
         yield put({
             type: actions.addProductToCardsSuccess.type,
             payload: result.data,

@@ -1,12 +1,10 @@
-import axios from "axios";
 import { call, put, takeLatest } from "redux-saga/effects";
 import { actions } from "./slice";
+import { authMe, authLogout } from "../../services/api";
 
 function* checkAuth() {
   try {
-    const result = yield call(axios.get, "http://localhost:5000/api/auth/me", {
-      withCredentials: true,
-    });
+    const result = yield call(authMe);
 
     if (result.status === 200) {
       yield put({
@@ -24,13 +22,7 @@ function* checkAuth() {
 
 function* logout() {
   try {
-    const result = yield call(
-      axios.post,
-      "http://localhost:5000/api/auth/logout",
-      {
-        withCredentials: true,
-      }
-    );
+    const result = yield call(authLogout);
 
     if (result.status === 200) {
       yield put({

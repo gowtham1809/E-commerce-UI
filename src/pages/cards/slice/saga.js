@@ -1,17 +1,10 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import axios from "axios";
 import { actions } from "./slice";
+import { fetchCards } from "../../../services/api";
 
 function* getCards() {
   try {
-    console.log("getCards");
-    const result = yield call(
-      axios.get,
-      "http://localhost:5000/api/cards",
-      {
-        withCredentials: true,
-      },
-    );
+    const result = yield call(fetchCards);
     yield put({
       type: actions.getCardsSuccess.type,
       payload: result.data,
