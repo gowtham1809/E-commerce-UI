@@ -1,29 +1,30 @@
   version: '3'
   services:
-    backend:
-      build:
-        context: ../backend-crud
-        dockerfile: Dockerfile
-      ports:
-        - "5000:5000"
-      networks:
-        - mern-network
+    # backend:
+    #   build:
+    #     context: ../backend-crud
+    #     dockerfile: Dockerfile
+    #   ports:
+    #     - "5000:5000"
+    #   networks:
+    #     - mern-network
     frontend:
-      build:
-        context: .
-        dockerfile: Dockerfile
+      # build:
+      #   context: .
+      #   dockerfile: Dockerfile
+      image: ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest
       ports:
         - "3000:3000"
 
-    mongo:
-      image: mongo
-      ports:
-        - "27017:27017"
-      volumes:
-        - mongo-data:/data/db
-      networks:
-        - mern-network
+  #   mongo:
+  #     image: mongo
+  #     ports:
+  #       - "27017:27017"
+  #     volumes:
+  #       - mongo-data:/data/db
+  #     networks:
+  #       - mern-network
         
-  networks:
-    mern-network:
-      driver: bridge
+  # networks:
+  #   mern-network:
+  #     driver: bridge

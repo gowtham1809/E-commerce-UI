@@ -29,6 +29,6 @@ jobs:
       - name: Deploy to EC2
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "\
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest && \
-            docker-compose up -d frontend \
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest &&
+            docker-compose -f /home/ec2-user/app/docker-compose.yml up -d frontend
           "
