@@ -31,8 +31,8 @@ jobs:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
       - name: Deploy to EC2
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} bash -s -- <<EOF
-          DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
-          docker pull \${DOCKERHUB_USERNAME}/frontend:latest
-          docker-compose -f /home/ec2-user/E-commerce-UI/docker-compose.yml up -d frontend
-          EOF
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "\
+          echo 'DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}' > /home/ec2-user/E-commerce-UI/.env && \
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest && \
+          docker-compose -f /home/ec2-user/E-commerce-UI/docker-compose.yml up -d frontend \
+          "
