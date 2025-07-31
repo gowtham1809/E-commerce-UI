@@ -32,14 +32,24 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
+      - name: Checkout Source
+        uses: actions/checkout@v3
+
+      - name: List files
+        run: ls -l
+
       - name: Copy docker-compose.yml to EC2
         run: |
           scp -o StrictHostKeyChecking=no ./docker-compose.yml ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:/home/ec2-user/E-commerce-UI/docker-compose.yml
 
+      - name: Copy .env file to EC2
+        run: |
+          echo "DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}" > .env
+          scp -o StrictHostKeyChecking=no .env ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:/home/ec2-user/E-commerce-UI/.env
+
       - name: Deploy on EC2
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
-            echo 'DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}' > /home/ec2-user/E-commerce-UI/.env && \
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest && \
             docker-compose -f /home/ec2-user/E-commerce-UI/docker-compose.yml up -d frontend
           "
