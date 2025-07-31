@@ -43,13 +43,12 @@ jobs:
 
       - name: Copy secrets to .env file
         run: |
-          echo "DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}" > .env
-          echo "SERVER_USER=${{ secrets.SERVER_USER }}" >> .env
-          echo "SERVER_IP=${{ secrets.SERVER_IP }}" >> .env
+          echo "REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}" > .env
+          echo "DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}" >> .env
+          echo "DOCKERHUB_TOKEN=${{ secrets.DOCKERHUB_TOKEN }}" >> .env
 
       - name: Copy .env file to EC2
         run: |
-
           scp -o StrictHostKeyChecking=no .env ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:/home/ec2-user/E-commerce-UI/.env
 
       - name: Deploy on EC2
