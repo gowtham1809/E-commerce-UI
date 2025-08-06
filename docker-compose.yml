@@ -1,5 +1,9 @@
 services:
   frontend:
     image: ${DOCKERHUB_USERNAME}/frontend:latest
+    container_name: frontend
     ports:
+    environment:
+      - REACT_APP_API_URL=${REACT_APP_API_URL}  
       - "3000:3000"
+    restart: unless-stopped
