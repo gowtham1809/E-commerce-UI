@@ -54,5 +54,5 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest && \
-            docker-compose -f /home/ec2-user/E-commerce-UI/docker-compose.yml up -d frontend
+            docker-compose --env-file /home/ec2-user/E-commerce-UI/.env -f /home/ec2-user/E-commerce-UI/docker-compose.yml up -d frontend
           "
