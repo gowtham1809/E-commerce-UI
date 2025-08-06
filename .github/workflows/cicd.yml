@@ -39,11 +39,7 @@ jobs:
 
       - name: Update code on EC2 (git pull)
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "\
-            cd /home/ec2-user/E-commerce-UI && \
-            git pull origin main && \
-            npm install
-          "
+          scp -o StrictHostKeyChecking=no ./docker-compose.yml ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:/home/ec2-user/E-commerce-UI/docker-compose.yml
       - name: Copy secrets to .env file ( git action CI runtime)
         run: |
           echo "REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}" > .env
@@ -52,7 +48,7 @@ jobs:
 
       - name: Copy .env file to EC2
         run: |
-          scp -o StrictHostKeyChecking=no .env ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:/home/ec2-user/E-commerce-UI/.env.production
+          scp -o StrictHostKeyChecking=no .env ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:/home/ec2-user/E-commerce-UI/.env
 
       - name: Deploy on EC2
         run: |
