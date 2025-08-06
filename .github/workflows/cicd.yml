@@ -42,7 +42,7 @@ jobs:
           scp -o StrictHostKeyChecking=no ./docker-compose.yml ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:/home/ec2-user/E-commerce-UI/docker-compose.yml
       - name: Copy secrets to .env file ( git action CI runtime)
         run: |
-          echo "REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}" > .env
+          echo "REACT_APP_API_URL=${{ env.REACT_APP_API_URL }}" > .env
           echo "DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}" >> .env
           echo "DOCKERHUB_TOKEN=${{ secrets.DOCKERHUB_TOKEN }}" >> .env
 
@@ -52,7 +52,8 @@ jobs:
 
       - name: Deploy on EC2
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest && \
-            docker-compose --env-file /home/ec2-user/E-commerce-UI/.env -f /home/ec2-user/E-commerce-UI/docker-compose.yml up -d frontend
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "\
+          cd /home/ec2-user/E-commerce-UI; && \
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest && \
+          docker-compose up -d frontend
           "
