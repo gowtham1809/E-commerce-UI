@@ -42,7 +42,7 @@ jobs:
           scp -o StrictHostKeyChecking=no ./docker-compose.yml ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:/home/ec2-user/E-commerce-UI/docker-compose.yml
       - name: Copy secrets to .env file ( git action CI runtime)
         run: |
-          echo "REACT_APP_API_URL=${{ env.REACT_APP_API_URL }}" > .env
+          echo "BACKEND_URL=${{ env.BACKEND_URL }}" > .env
           echo "DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}" >> .env
           echo "DOCKERHUB_TOKEN=${{ secrets.DOCKERHUB_TOKEN }}" >> .env
 
@@ -55,11 +55,12 @@ jobs:
           ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "\
             cd /home/ec2-user/E-commerce-UI && \
             export \$(cat .env | xargs) && \
-            echo REACT_APP_API_URL=\$REACT_APP_API_URL && \
-            echo env-URL=${{ env.REACT_APP_API_URL }} && \
-            echo secrets-url=${{ secrets.REACT_APP_API_URL }} && \
-            echo DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }} && \
-            echo DOCKERHUB_TOKEN=${{ secrets.DOCKERHUB_TOKEN }} && \
+            export BACKEND_URL='${{ env.BACKEND_URL }}'; \
+            echo BACKEND_URL=\$BACKEND_URL && \
+            echo env-URL='${{ env.BACKEND_URL }}' && \
+            echo secrets-url='${{ secrets.BACKEND_URL }}' && \
+            echo DOCKERHUB_USERNAME='${{ secrets.DOCKERHUB_USERNAME }}' && \
+            echo DOCKERHUB_TOKEN='${{ secrets.DOCKERHUB_TOKEN }}' && \
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest && \
             docker-compose up -d frontend \
           "

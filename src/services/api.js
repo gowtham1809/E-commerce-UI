@@ -1,7 +1,7 @@
 import axios from "axios";
-console.log("env:", process.env.REACT_APP_API_URL);
-const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
-console.log("env-type:", process.env.NODE_ENV); // Debugging line to check the API URL
+console.log("env:", process.env.BACKEND_URL);
+const API_URL = process.env.BACKEND_URL || "http://localhost:5000/api";
+console.log("env-type:", process.env); // Debugging line to check the API URL
 
 
 export const api = axios.create({
