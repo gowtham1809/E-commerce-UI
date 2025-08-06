@@ -18,7 +18,11 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build Docker image
-        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest .
+        run: |
+          echo "Building Docker image with BACKEND_URL..."
+          echo "BACKEND_URL=${{ secrets.BACKEND_URL }}"  # 🛑 For debugging only; remove in production if sensitive
+          docker build --build-arg BACKEND_URL=${{ secrets.BACKEND_URL }} \
+                       -t ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest .
 
       - name: Push Docker image
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest
@@ -42,7 +46,7 @@ jobs:
           scp -o StrictHostKeyChecking=no ./docker-compose.yml ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:/home/ec2-user/E-commerce-UI/docker-compose.yml
       - name: Copy secrets to .env file ( git action CI runtime)
         run: |
-          echo "BACKEND_URL=${{ env.BACKEND_URL }}" > .env
+          echo "BACKEND_URL=${{ secrets.BACKEND_URL }}" > .env
           echo "DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}" >> .env
           echo "DOCKERHUB_TOKEN=${{ secrets.DOCKERHUB_TOKEN }}" >> .env
 
@@ -54,13 +58,6 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "\
             cd /home/ec2-user/E-commerce-UI && \
-            export \$(cat .env | xargs) && \
-            export BACKEND_URL='${{ env.BACKEND_URL }}'; \
-            echo BACKEND_URL=\$BACKEND_URL && \
-            echo env-URL='${{ env.BACKEND_URL }}' && \
-            echo secrets-url='${{ secrets.BACKEND_URL }}' && \
-            echo DOCKERHUB_USERNAME='${{ secrets.DOCKERHUB_USERNAME }}' && \
-            echo DOCKERHUB_TOKEN='${{ secrets.DOCKERHUB_TOKEN }}' && \
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest && \
             docker-compose up -d frontend \
           "

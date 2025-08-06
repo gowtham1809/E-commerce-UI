@@ -1,6 +1,5 @@
 import axios from "axios";
-console.log("env:", process.env.BACKEND_URL);
-const API_URL = process.env.BACKEND_URL || "http://localhost:5000/api";
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
 console.log("env-type:", process.env); // Debugging line to check the API URL
 
 

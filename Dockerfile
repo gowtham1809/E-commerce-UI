@@ -10,6 +10,10 @@
  # copy the rest of the file
  COPY . .
 
+ # Inject BACKEND_URL
+ ARG BACKEND_URL
+ ENV REACT_APP_API_URL=$BACKEND_URL
+
  # build the application
  # assuming you have a build script in your package.json
  RUN npm run build
