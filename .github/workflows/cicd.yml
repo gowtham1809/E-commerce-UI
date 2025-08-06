@@ -55,7 +55,12 @@ jobs:
           ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "\
           cd /home/ec2-user/E-commerce-UI; \
           export $(cat .env | xargs); \
-          echo 'REACT_APP_API_URL=${{ env.REACT_APP_API_URL }}'; \
+          echo 'REACT_APP_API_URL=${{ REACT_APP_API_URL }}'; \
+          echo 'env-URL=${{ env.REACT_APP_API_URL }}'; \
+          echo 'secrets-url=${{ secrets.REACT_APP_API_URL }}'; \
+          echo 'DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}'; \
+          echo 'DOCKERHUB_TOKEN=${{ secrets.DOCKERHUB_TOKEN }}'; \
+
           docker pull ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest && \
           docker-compose up -d frontend
           "
