@@ -53,7 +53,7 @@ jobs:
       - name: Deploy on EC2
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "\
-          cd /home/ec2-user/E-commerce-UI; && \
+          cd /home/ec2-user/E-commerce-UI; \
           docker pull ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest && \
           docker-compose up -d frontend
           "
